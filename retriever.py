@@ -3,22 +3,15 @@ os.environ["ANONYMIZED_TELEMETRY"] = "False"
 os.environ["CHROMA_TELEMETRY"] = "False"
 import chromadb
 from chromadb.config import Settings
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from dotenv import load_dotenv
 
 load_dotenv()
 
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 CHROMA_PATH = os.path.join(os.path.dirname(__file__), "chroma_db")
 
 
 def get_relevant_chunks(query: str, top_k: int = 5) -> list[dict]:
     """Take a user query and return the most relevant constitutional chunks."""
-
-    embeddings = GoogleGenerativeAIEmbeddings(
-        model="models/gemini-embedding-001",
-        google_api_key=GEMINI_API_KEY
-    )
 
     client = chromadb.PersistentClient(
         path=CHROMA_PATH,
@@ -27,10 +20,8 @@ def get_relevant_chunks(query: str, top_k: int = 5) -> list[dict]:
 
     collection = client.get_collection("constitution")
 
-    query_vector = embeddings.embed_query(query)
-
     results = collection.query(
-        query_embeddings=[query_vector],
+        query_texts=[query],
         n_results=top_k,
         include=["documents", "metadatas", "distances"]
     )

@@ -5,12 +5,10 @@ import time
 import fitz  # PyMuPDF
 import chromadb
 from chromadb.config import Settings
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from dotenv import load_dotenv
 
 load_dotenv()
 
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 PDF_PATH = os.path.join(os.path.dirname(__file__), "constitution", "constitution.pdf")
 CHROMA_PATH = os.path.join(os.path.dirname(__file__), "chroma_db")
 
@@ -70,12 +68,7 @@ def extract_chunks_from_pdf(pdf_path: str) -> list[dict]:
 
 
 def embed_and_store(chunks: list[dict]):
-    """Embed chunks using Gemini and store in ChromaDB."""
-    embeddings = GoogleGenerativeAIEmbeddings(
-        model="gemini-embedding-001",
-        google_api_key=GEMINI_API_KEY
-    )
-
+    """Embed chunks local model and store in ChromaDB."""
     client = chromadb.PersistentClient(
         path=CHROMA_PATH,
         settings=Settings(anonymized_telemetry=False, allow_reset=True)
@@ -89,9 +82,9 @@ def embed_and_store(chunks: list[dict]):
 
     collection = client.create_collection("constitution")
 
-    print(f"Embedding and storing {len(chunks)} chunks...")
+    print(f"Embedding and storing {len(chunks)} chunks locally... (this might take 10-30 seconds)")
 
-    batch_size = 30
+    batch_size = 100
     total_batches = (len(chunks) + batch_size - 1) // batch_size
 
     for i in range(0, len(chunks), batch_size):
@@ -105,10 +98,8 @@ def embed_and_store(chunks: list[dict]):
         } for c in batch]
         ids = [f"chunk_{i + j}" for j in range(len(batch))]
 
-        vectors = embeddings.embed_documents(texts)
-
+        # Chroma automatically embeds utilizing the free local default model if no embeddings object is passed!
         collection.add(
-            embeddings=vectors,
             documents=texts,
             metadatas=metadatas,
             ids=ids
@@ -116,10 +107,6 @@ def embed_and_store(chunks: list[dict]):
 
         current_batch = i // batch_size + 1
         print(f"Stored batch {current_batch} / {total_batches}")
-
-        if current_batch < total_batches:
-            print(f"Waiting 65 seconds before next batch...")
-            time.sleep(65)
 
     print(f"Done. {collection.count()} chunks stored in ChromaDB.")
 
