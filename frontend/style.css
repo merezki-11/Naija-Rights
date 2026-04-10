@@ -181,9 +181,10 @@ textarea {
     color: var(--text-main);
     font-family: inherit;
     font-size: 1.05rem;
+    line-height: 1.4;
     resize: none;
     max-height: 150px;
-    padding: 0.5rem 0;
+    padding: 0.6rem 0.2rem;
     outline: none;
 }
 
