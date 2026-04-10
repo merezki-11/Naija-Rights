@@ -24,7 +24,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 100vh; /* Fallback for older browsers */
+    height: 100dvh; /* Dynamic viewport fix for mobile cutoffs */
     overflow: hidden;
 }
 
@@ -46,6 +47,10 @@ body {
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
         box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+    .message {
+        max-width: 85%;
+        gap: 1rem;
     }
 }
 
@@ -88,8 +93,8 @@ body {
 
 .message {
     display: flex;
-    gap: 1rem;
-    max-width: 85%;
+    gap: 0.75rem;
+    max-width: 95%; /* Wider on mobile to prevent squishing */
     animation: fadeIn 0.3s ease-out;
 }
 
