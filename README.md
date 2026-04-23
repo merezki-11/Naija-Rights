@@ -10,16 +10,16 @@ A full-stack Retrieval-Augmented Generation (RAG) application designed to democr
 ## Screenshots
 
 ### Welcome Screen
-![Welcome Screen](images/welcome.png)
+![Welcome Screen](images/Welcome%20Screen.png)
 
 ### Conversational Pidgin Interface
-![Conversational Interface](images/conversational-interface.png)
+![Conversational Interface](images/Conversational%20Interface.png)
 
 ### Strict Section Citations
-![Section Citations](images/section-citations.png)
+![Section Citations](images/Section%20Citations.png)
 
 ### Mobile View
-![Mobile View](images/mobile-view.png)
+![Mobile View](images/Mobile%20View.jpeg)
 
 ---
 
